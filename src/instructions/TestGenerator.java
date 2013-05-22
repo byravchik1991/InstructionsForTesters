@@ -1,6 +1,6 @@
 package instructions;
 
-import javafx.util.Pair;
+import org.apache.commons.collections.keyvalue.DefaultMapEntry;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.Locatable;
@@ -17,10 +17,10 @@ public class TestGenerator {
     public static String TITLE = "tittle";
 
     public static List<String> generateTests(Map<ElementType, List<WebElement>> elementsMap) {
-        TreeSet<Pair<WebElement, String>> items = new TreeSet<Pair<WebElement, String>>(
-                new Comparator<Pair<WebElement, String>>() {
+        TreeSet<Map.Entry<WebElement, String>> items = new TreeSet<Map.Entry<WebElement, String>>(
+                new Comparator<Map.Entry<WebElement, String>>() {
                     @Override
-                    public int compare(Pair<WebElement, String> o1, Pair<WebElement, String> o2) {
+                    public int compare(Map.Entry<WebElement, String> o1, Map.Entry<WebElement, String> o2) {
                         Integer y1 = ((Locatable) o1.getKey()).getCoordinates().onPage().getY();
                         Integer y2 = ((Locatable) o2.getKey()).getCoordinates().onPage().getY();
 
@@ -44,12 +44,12 @@ public class TestGenerator {
             }
 
             for (WebElement element : elementsMap.get(type)) {
-                items.add(new Pair<WebElement, String>(element, generateTest(type, getElementText(element))));
+                items.add(new DefaultMapEntry(element, generateTest(type, getElementText(element))));
             }
         }
 
         StringBuilder builder = new StringBuilder();
-        for (Pair<WebElement, String> item : items) {
+        for (Map.Entry<WebElement, String> item : items) {
             builder.append(item.getValue()).append("\r\n");
         }
         String test = builder.toString();
